@@ -1,8 +1,7 @@
 <?php
 
-$app->get('/', function () {
-    require '../src/model.php';
-    $articles = getArticles();
+$app->get('/', function () use($app) {
+    $articles = $app['dao.article']->findAll();
 
     ob_start();
     require '../views/view.php';
