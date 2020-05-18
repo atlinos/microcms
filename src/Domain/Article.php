@@ -4,55 +4,51 @@ namespace MicroCMS\Domain;
 
 class Article
 {
-    protected $id;
-    protected $title;
-    protected $content;
+    /**
+     * Article id.
+     *
+     * @var integer
+     */
+    private $id;
 
     /**
-     * @return mixed
+     * Article title.
+     *
+     * @var string
      */
-    public function getId()
-    {
+    private $title;
+
+    /**
+     * Article content.
+     *
+     * @var string
+     */
+    private $content;
+
+    public function getId() {
         return $this->id;
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
-    {
+    public function setId($id) {
         $this->id = $id;
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTitle()
-    {
+    public function getTitle() {
         return $this->title;
     }
 
-    /**
-     * @param mixed $title
-     */
-    public function setTitle($title)
-    {
+    public function setTitle($title) {
         $this->title = $title;
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getContent()
-    {
+    public function getContent() {
         return $this->content;
     }
 
-    /**
-     * @param mixed $content
-     */
-    public function setContent($content)
-    {
+    public function setContent($content) {
         $this->content = $content;
+        return $this;
     }
 }

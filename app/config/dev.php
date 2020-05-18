@@ -1,5 +1,5 @@
 <?php
 
-require __DIR__ . '/prod.php';
+require __DIR__.'/prod.php';
 
 $app['debug'] = true;
