@@ -16,3 +16,8 @@ nous pouvons nous livrer entièrement à la volupté et chasser toute sorte de d
 devoirs de la société ou à la nécessité des affaires, souvent il faut faire divorce avec la volupté, et ne se point
 refuser à la peine. La règle que suit en cela un homme sage, c’est de renoncer à de légères voluptés pour en avoir de
 plus grandes, et de savoir supporter des douleurs légères pour en éviter de plus fâcheuses.");
+
+insert into comment values
+(1, 'John Doe', 'Great! Keep up the good work.', 1);
+insert into comment values
+(2, 'Ann Yone', "Thank you, I'll try my best.", 1);

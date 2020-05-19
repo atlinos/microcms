@@ -4,26 +4,11 @@ namespace MicroCMS\Domain;
 
 class Article
 {
-    /**
-     * Article id.
-     *
-     * @var integer
-     */
-    private $id;
+    protected $id;
 
-    /**
-     * Article title.
-     *
-     * @var string
-     */
-    private $title;
+    protected $title;
 
-    /**
-     * Article content.
-     *
-     * @var string
-     */
-    private $content;
+    protected $content;
 
     public function getId() {
         return $this->id;
@@ -31,7 +16,6 @@ class Article
 
     public function setId($id) {
         $this->id = $id;
-        return $this;
     }
 
     public function getTitle() {
@@ -40,7 +24,6 @@ class Article
 
     public function setTitle($title) {
         $this->title = $title;
-        return $this;
     }
 
     public function getContent() {
@@ -49,6 +32,5 @@ class Article
 
     public function setContent($content) {
         $this->content = $content;
-        return $this;
     }
 }
