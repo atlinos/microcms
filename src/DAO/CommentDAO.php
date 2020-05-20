@@ -11,16 +11,23 @@ class CommentDAO extends DAO
 {
     protected $articleDAO;
 
+    protected $userDAO;
+
     public function setArticleDAO(ArticleDAO $articleDAO)
     {
         $this->articleDAO = $articleDAO;
+    }
+
+    public function setUserDAO(UserDAO $userDAO)
+    {
+        $this->userDAO = $userDAO;
     }
 
     public function findAllByArticle($articleId)
     {
         $article = $this->articleDAO->find($articleId);
 
-        $sql = "select id, content, author from comment where article_id = ? order by id";
+        $sql = "select id, content, user_id from comment where article_id = ? order by id";
         $result = $this->getDb()->fetchAll($sql, [$articleId]);
 
         $comments = [];
@@ -40,13 +47,19 @@ class CommentDAO extends DAO
 
         $comment->setId($row['id']);
         $comment->setContent($row['content']);
-        $comment->setAuthor($row['author']);
 
         if (array_key_exists('article_id', $row)) {
             $articleId = $row['article_id'];
             $article = $this->articleDAO->find($articleId);
 
             $comment->setArticle($article);
+        }
+
+        if (array_key_exists('user_id', $row)) {
+            $userId = $row['user_id'];
+            $user = $this->userDAO->find($userId);
+
+            $comment->setAuthor($user);
         }
 
         return $comment;
