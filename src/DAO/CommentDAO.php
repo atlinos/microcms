@@ -4,7 +4,6 @@
 namespace MicroCMS\DAO;
 
 
-use Doctrine\DBAL\Connection;
 use MicroCMS\Domain\Comment;
 
 class CommentDAO extends DAO
@@ -21,6 +20,24 @@ class CommentDAO extends DAO
     public function setUserDAO(UserDAO $userDAO)
     {
         $this->userDAO = $userDAO;
+    }
+
+    public function save(Comment $comment)
+    {
+        $commentData = [
+            'content' => $comment->getContent(),
+            'article_id' => $comment->getArticle()->getId(),
+            'user_id' => $comment->getAuthor()->getId()
+        ];
+
+        if ($comment->getId()) {
+            $this->getDb()->update('comment', $commentData, ['id' => $comment->getId()]);
+        } else {
+            $this->getDb()->insert('comment', $commentData);
+
+            $id = $this->getDb()->lastInsertId();
+            $comment->setId($id);
+        }
     }
 
     public function findAllByArticle($articleId)

@@ -27,6 +27,9 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), [
         ]
     ]
 ]);
+$app->register(new Silex\Provider\FormServiceProvider());
+$app->register(new Silex\Provider\LocaleServiceProvider());
+$app->register(new Silex\Provider\TranslationServiceProvider());
 
 $app['dao.article'] = function ($app) {
     return new MicroCMS\DAO\ArticleDAO($app['db']);

@@ -1,5 +1,7 @@
 <?php
 
+use MicroCMS\Domain\Comment;
+use MicroCMS\Form\Type\CommentType;
 use Symfony\Component\HttpFoundation\Request;
 
 $app->get('/', function () use ($app) {
@@ -10,13 +12,34 @@ $app->get('/', function () use ($app) {
     ]);
 })->bind('home');
 
-$app->get('/article/{id}', function ($id) use ($app) {
+$app->match('/article/{id}', function ($id, Request $request) use ($app) {
     $article = $app['dao.article']->find($id);
+    $commentFormView = null;
+
+    if ($app['security.authorization_checker']->isGranted('IS_AUTHENTICATED_FULLY')) {
+        $comment = new Comment();
+
+        $comment->setArticle($article);
+        $user = $app['user'];
+        $comment->setAuthor($user);
+
+        $commentForm = $app['form.factory']->create(CommentType::class, $comment);
+        $commentForm->handleRequest($request);
+
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $app['dao.comment']->save($comment);
+            $app['session']->getFlashBag()->add('success', 'Your comment was successfully added.');
+        }
+
+        $commentFormView = $commentForm->createView();
+    }
+
     $comments = $app['dao.comment']->findAllByArticle($id);
 
     return $app['twig']->render('article.html.twig', [
         'article' => $article,
-        'comments' => $comments
+        'comments' => $comments,
+        'commentForm' => $commentFormView
     ]);
 })->bind('article');
 
