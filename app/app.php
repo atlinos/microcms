@@ -2,6 +2,7 @@
 
 use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\Debug\ExceptionHandler;
+use Symfony\Component\HttpFoundation\Request;
 
 ErrorHandler::register();
 ExceptionHandler::register();
@@ -42,6 +43,11 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), [
 $app->register(new Silex\Provider\FormServiceProvider());
 $app->register(new Silex\Provider\LocaleServiceProvider());
 $app->register(new Silex\Provider\TranslationServiceProvider());
+$app->register(new Silex\Provider\MonologServiceProvider(), [
+    'monolog.logfile' => __DIR__ . '/../var/logs/microcms.log',
+    'monolog.name' => 'MicroCMS',
+    'monolog.level' => $app['monolog.level']
+]);
 
 $app['dao.article'] = function ($app) {
     return new MicroCMS\DAO\ArticleDAO($app['db']);
@@ -56,3 +62,18 @@ $app['dao.comment'] = function ($app) {
 
     return $commentDAO;
 };
+
+$app->error(function (Exception $e, Request $request, $code) use ($app) {
+    switch ($code) {
+        case 403:
+            $message = 'Access denied.';
+            break;
+        case 404:
+            $message = 'The requested resource could not be found.';
+            break;
+        default:
+            $message = 'Something went wrong.';
+    }
+
+    return $app['twig']->render('error.html.twig', ['message' => $message]);
+});
