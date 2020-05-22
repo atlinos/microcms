@@ -13,6 +13,12 @@ $app->register(new Silex\Provider\TwigServiceProvider(), [
 $app->register(new Silex\Provider\AssetServiceProvider(), [
     'assets.version' => 'v1'
 ]);
+$app['twig'] = $app->extend('twig', function (Twig_Environment $twig, $app) {
+    $twig->addExtension(new Twig_Extensions_Extension_Text());
+
+    return $twig;
+});
+$app->register(new Silex\Provider\ValidatorServiceProvider());
 $app->register(new Silex\Provider\SessionServiceProvider());
 $app->register(new Silex\Provider\SecurityServiceProvider(), [
     'security.firewalls' => [
@@ -25,6 +31,12 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), [
                 return new MicroCMS\DAO\UserDAO($app['db']);
             }
         ]
+    ],
+    'security.role_hierarchy' => [
+        'ROLE_ADMIN' => ['ROLE_USER']
+    ],
+    'security.access_rules' => [
+        ['^/admin', 'ROLE_ADMIN']
     ]
 ]);
 $app->register(new Silex\Provider\FormServiceProvider());
