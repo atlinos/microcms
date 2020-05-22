@@ -184,3 +184,59 @@ $app->get('/admin/user/{id}/delete', function ($id, Request $request) use ($app)
 
     return $app->redirect($app['url_generator']->generate('admin'));
 })->bind('admin_user_delete');
+
+$app->get('/api/articles', function () use ($app) {
+    $articles = $app['dao.article']->findAll();
+
+    $responseData = [];
+    foreach ($articles as $article) {
+        $responseData[] = [
+            'id' => $article->getId(),
+            'title' => $article->getTitle(),
+            'content' => $article->getContent()
+        ];
+    }
+
+    return $app->json($responseData);
+})->bind('api_articles');
+
+$app->get('/api/article/{id}', function ($id) use ($app) {
+    $article = $app['dao.article']->find($id);
+
+    $responseData = [
+        'id' => $article->getId(),
+        'title' => $article->getTitle(),
+        'content' => $article->getContent()
+    ];
+
+    return $app->json($responseData);
+})->bind('api_article');
+
+$app->post('/api/article', function (Request $request) use ($app) {
+    if (! $request->request->has('title')) {
+        return $app->json('Missing required parameter: title', 400);
+    }
+    if (! $request->request->has('content')) {
+        return $app->json('Missing required parameter: content', 400);
+    }
+
+    $article = new Article();
+    $article->setTitle($request->request->get('title'));
+    $article->setContent($request->request->get('content'));
+    $app['dao.article']->save($article);
+
+    $responseData = [
+        'id' => $article->getId(),
+        'title' => $article->getTitle(),
+        'content' => $article->getContent()
+    ];
+
+    return $app->json($responseData, 201);
+})->bind('api_article_add');
+
+$app->delete('/api/article/{id}', function ($id, Request $request) use ($app) {
+    $app['dao.comment']->deleteAllByArticle($id);
+    $app['dao.article']->delete($id);
+
+    return $app->json('No Content', 204);
+})->bind('api_article_delete');

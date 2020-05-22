@@ -52,6 +52,8 @@ class AppTest extends WebTestCase
             ['/admin/comment/1/edit'],
             ['/admin/user/add'],
             ['/admin/user/1/edit'],
+            ['/api/articles'],
+            ['/api/article/1'],
         ];
     }
 }

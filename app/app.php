@@ -77,3 +77,10 @@ $app->error(function (Exception $e, Request $request, $code) use ($app) {
 
     return $app['twig']->render('error.html.twig', ['message' => $message]);
 });
+
+$app->before(function (Request $request) {
+    if (strpos($request->headers->get('Content-Type'), 'application/json') === 0) {
+        $data = json_decode($request->getContent(), true);
+        $request->request->replace(is_array($data) ? $data : []);
+    }
+});
